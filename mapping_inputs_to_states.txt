@@ -1,0 +1,44 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input mappings 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Node mappings
+grid(ID, pair(X,Y)):- init(object(node,ID),value(at,pair(X,Y))).
+pair(X,Y) :- init(object(node, ID), value(at, pair(X,Y))).
+node(ID) :- init(object(node, ID), value(at, pair(X,Y))).
+
+%% Highway mappings
+
+hightway(ID) :- init(object(highway,ID),value(at,pair(X,Y))).
+
+%% picking station mappings
+locPickingStation(PID, ID) :- init(object(pickingStation,PID),value(at,pair(X,Y))), init(object(node,ID),value(at,pair(X,Y))).
+picking(PID) :- init(object(pickingStation,PID),value(at,pair(X,Y))), init(object(node,ID),value(at,pair(X,Y))).
+
+%% Robot Mapping
+% initially robot is located at grid with X,Y coordinates
+
+locRobot(RID, object(node, ID), 0) :- init(object(robot,RID),value(at,pair(X,Y))), grid(ID, pair(X,Y)).
+robot(RID):- init(object(robot, RID), value(at, pair(X,Y))).
+
+%% Shelf Mapping
+% initially shelf is located at grid with X,Y coordinates
+
+locShelf(SID, object(node, ID), 0) :- init(object(shelf,SID),value(at,pair(X,Y))), grid(ID, pair(X,Y)).
+shelf(SID):- init(object(shelf, SID), value(at, pair(X,Y))).
+
+%% Product Mapping
+%number of product are their on a shelf
+
+productOnShelf(PID, object(shelf, SID), with(quantity, PQUANT), 0) :- init(object(product,PID),value(at,pair(SID, PQUANT))).
+product(PID):- init(object(product, PID), value(at, pair(SID,NUMP))).
+
+
+% Order Mapping
+
+%order for particular product
+placeOrder(OID, object(node, ID), contains(PID, PQUANT), 0) :- init(object(order,OID),value(line,pair(PID, PQUANT))), locPickingStation(PKID, ID), init(object(order, OID), value(pickingStation, PKID)).
+order(OID):- init(object(order, OID), value(pickingStation, PKID)).
+
+
+
